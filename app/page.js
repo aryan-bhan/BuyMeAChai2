@@ -3,7 +3,7 @@ export default function Home() {
   return (
     <>
     <div className="flex justify-center flex-col gap-6 pb-24 pt-40 text-white items-center ">
-      <div className="font-bold pl-12 flex gap-2 items-center  text-6xl">Patreon<span><img src="/tea.gif" width={60} alt="" /></span></div>
+      <div className="font-bold pl-12 flex gap-2 items-center  text-6xl">Buy Me A Chai<span><img src="/tea.gif" width={60} alt="" /></span></div>
       <p>
         A crowdfunding platform for creators.
       </p>
