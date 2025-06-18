@@ -13,7 +13,7 @@ export default function RootLayout({ children }) {
   return (
     <SessionWrapper>
       <SessionWrapper>
-        <div className="min-h-screen bg-slate-900  bottom-0 left-0 right-0 top-0 bg-[radial-gradient(circle_500px_at_50%_200px,#3e3e3e,transparent)]"> 
+        <div className="min-h-screen bg-[#ffe8d6]  bottom-0 left-0 right-0 top-0 "> 
         {/* {pathname !== "/login" && <Navbar/>} */}
         <Navbar/>
         {children}
