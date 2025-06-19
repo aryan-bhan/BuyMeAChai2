@@ -1,12 +1,10 @@
 import NextAuth from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
-
 import GithubProvider from "next-auth/providers/github"
-// import mongoose from 'mongoose'
 import User from '@/models/User'
-// import Payment from '@/models/Payment'
 import connectDB from '@/db/connectDb'
-
+import CredentialsProvider from 'next-auth/providers/credentials'
+import { compare } from 'bcryptjs'
 
 export const authoptions =  NextAuth({
     providers: [
@@ -17,7 +15,27 @@ export const authoptions =  NextAuth({
       GoogleProvider({
         clientId : process.env.GOOGLE_ID,
         clientSecret : process.env.GOOGLE_SECRET,
-      })
+      }),
+    CredentialsProvider({
+      name: "Credentials",
+      credentials: {
+        email: { label: "Email", type: "text" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials) {
+        await connectDB();
+
+        const user = await User.findOne({ email: credentials.email });
+        if (!user) throw new Error("No user found");
+        const isValid = await compare(credentials.password, user.password);
+        if (!isValid) throw new Error("Invalid password");
+        return {
+          id: user._id,
+          name: user.username,
+          email: user.email,
+        };
+      },
+    })
     ],
     pages: {
       signIn : "/login"
@@ -27,11 +45,9 @@ export const authoptions =  NextAuth({
       if(account.provider === "github")
         {
           await connectDB();
-          console.log(user);
           const currentUser = await User.findOne({email : user.email})
           if(!currentUser)
           {
-            console.log('test');
             const newUser = await User.create({
               email : user.email,
               username : user.email.split("@")[0]
@@ -41,7 +57,6 @@ export const authoptions =  NextAuth({
       if(account.provider === "google")
       {
         await connectDB();
-        console.log(user);
         const currentuser = await User.findOne({email : user.email})
         if(!currentuser)
         {
@@ -54,18 +69,36 @@ export const authoptions =  NextAuth({
       }
       return true;
     },
-    async session({ session, user, token }) {
-      console.log(session)
+    async session({ session, token }) {
+      if(token.provider === "credentials")
+      {
+        session.user = token.user
+        return session;
+      }
+
       const dbUser = await User.findOne({email: session.user.email})
       session.user.name = dbUser.username;
-      // console.log(session.user.name)
       return session
     },
     async redirect({ url, baseUrl }) {
       // Redirect to dashboard after login
       return url.startsWith(baseUrl) ? url : baseUrl + "/dashboard";
-    }
+    },
+     async jwt({ token, user ,account }) {
+    if (account && user) {
+    token.user = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+    };
+    token.provider = account.provider;
   }
+  return token;
+  }
+  },
+   session: {
+    strategy: "jwt",
+  },
   })
 
   export {authoptions as GET , authoptions as POST}

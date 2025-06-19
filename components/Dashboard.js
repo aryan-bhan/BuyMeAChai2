@@ -9,14 +9,13 @@ import { Bounce } from 'react-toastify';
 
 const Dashboard = () => {
 
-    const { data: session,status,update} = useSession()
+    const { data: session,status} = useSession()
     const router = useRouter()
     const [form, setform] = useState({})
-
     useEffect( () => {
         if(status === "loading"){
             return;
-        } 
+        }
         if (!session) {
             router.push('/login')
         }
@@ -26,7 +25,7 @@ const Dashboard = () => {
     }, [session,status])
     
     if (status === "loading") {
-    return <div className="text-center pt-20">Loading...</div>; // optional UI
+    return <div className="text-center pt-20">Loading...</div>;
   }
     const getData = async () => {
         let u = await fetchuser(session.user.name)

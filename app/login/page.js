@@ -1,8 +1,8 @@
 'use client'
 import { signIn } from 'next-auth/react'
 import React from 'react'
-import { useEffect } from 'react'
-
+import { useEffect,useState } from 'react'
+import { useRouter } from 'next/navigation'
 const Login = () => {
     useEffect(() => {
             document.body.style.overflow = 'hidden';
@@ -10,6 +10,30 @@ const Login = () => {
           document.body.style.overflow = 'auto';
         };
       }, []);
+    
+    const router = useRouter();
+
+    const handlelogin = async(e)=>
+    {
+        e.preventDefault();
+        const formdata = new FormData(e.target);
+        const email = formdata.get("email");
+        const password = formdata.get("password");
+
+        const res = await signIn("credentials", {
+        email,
+        password,
+        redirect : false
+    });
+
+    if (res.ok) {
+        router.push("/dashboard");
+    } else {
+        alert("Invalid email or password");
+    }
+    };
+
+    const [eyeopen, setEyeopen] = useState(false);
 
   return (
     
@@ -28,7 +52,7 @@ const Login = () => {
 
     <div className=" mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className=" bg-[#ffe8d6] py-12 px-4 shadow-xl sm:rounded-3xl sm:px-10">
-            <form className="space-y-6" action="#" method="POST">
+            <form className="space-y-6" onSubmit={handlelogin}>
                 <div>
                     <label htmlFor="email" className="block text-sm font-medium text-black">
                         Email address
@@ -44,10 +68,11 @@ const Login = () => {
                     <label htmlFor="password" className="block text-sm font-medium text-black">
                         Password
                     </label>
-                    <div className="mt-1">
-                        <input id="password" name="password" type="password" autoComplete="current-password" required
+                    <div className="mt-1 flex relative">
+                        <input id="password" name="password" type={eyeopen ? "text" : "password"} autoComplete="current-password" required
                             className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                             placeholder="Enter your password"></input>
+                            {eyeopen ? <button type='button' onClick={()=>{setEyeopen(false)}}><img src="/eye.png" alt="" width={20} className='absolute right-3 top-2 z-10'/></button> :  <button type='button' onClick={()=>{setEyeopen(true)}}><img src="/eyecross.png" alt="" width={20} className='absolute right-3 top-2 z-10'/></button>}  
                     </div>
                 </div>
 

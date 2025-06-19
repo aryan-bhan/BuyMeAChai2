@@ -25,7 +25,6 @@ export const initiate = async(amount , to_username,paymentform) =>
     }
 
     let x = await instance.orders.create(options);
-    console.log(x);
     await Payment.create({oid : x.id , amount : amount/100,to_user : to_username , name : paymentform.name , message : paymentform.message})
 
     return x;
@@ -35,7 +34,7 @@ export const initiate = async(amount , to_username,paymentform) =>
 export const fetchuser = async(username)=>
 {
     await connectDB();
-    let u = await User.findOne({username :username});
+    let u = await User.findOne({username : username});
     let user = u.toObject({ flattenObjectIds: true })
     return user;
 }
