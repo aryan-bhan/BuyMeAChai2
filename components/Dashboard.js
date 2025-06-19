@@ -1,6 +1,6 @@
 "use client"
 import React, { useEffect, useState } from 'react'
-import { useSession, signIn, signOut } from "next-auth/react"
+import { useSession} from "next-auth/react"
 import { useRouter } from 'next/navigation'
 import { fetchuser, UpdateProfile } from '@/actions/useractions'
 import { ToastContainer, toast } from 'react-toastify';
@@ -8,20 +8,26 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Bounce } from 'react-toastify';
 
 const Dashboard = () => {
-    const { data: session, update } = useSession()
+
+    const { data: session,status,update} = useSession()
     const router = useRouter()
     const [form, setform] = useState({})
-    // console.log(session)
+
     useEffect( () => {
-        
+        if(status === "loading"){
+            return;
+        } 
         if (!session) {
             router.push('/login')
         }
         else {
             getData()
         }
-    }, [])
-
+    }, [session,status])
+    
+    if (status === "loading") {
+    return <div className="text-center pt-20">Loading...</div>; // optional UI
+  }
     const getData = async () => {
         let u = await fetchuser(session.user.name)
         setform(u)
@@ -72,20 +78,21 @@ const Dashboard = () => {
 
                 <form className="max-w-2xl mx-auto" action={handleSubmit}>
 
-                    <div className='my-2'>
+                    {/* <div className='my-2'>
                         <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
                         <input value={form.name ? form.name : ""} onChange={handleChange} type="text" name='name' id="name" className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                    </div> */}
+                    {/* input forusername */}
+                    <div className='my-2'>
+                        <label htmlFor="username" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Username</label>
+                        <input value={form.username ? form.username : ""} onChange={handleChange} type="text" name='username' id="username" className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
                     </div>
                     {/* input for email */}
                     <div className="my-2">
                         <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
                         <input value={form.email ? form.email : ""} onChange={handleChange} type="email" name='email' id="email" className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
                     </div>
-                    {/* input forusername */}
-                    <div className='my-2'>
-                        <label htmlFor="username" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Username</label>
-                        <input value={form.username ? form.username : ""} onChange={handleChange} type="text" name='username' id="username" className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
-                    </div>
+                    
                     {/* input for profile picture of input type text */}
                     <div className="my-2">
                         <label htmlFor="profilepic" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Profile Picture</label>

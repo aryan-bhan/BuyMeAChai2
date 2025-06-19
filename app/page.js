@@ -1,4 +1,6 @@
+"use client"
 import {Roboto} from 'next/font/google';
+
 const roboto = Roboto({
   subsets: ['latin'],
   weight: ['400','700'],
@@ -7,7 +9,7 @@ const roboto = Roboto({
 export default function Home() {
   return (
     <>
-    <div className="flex justify-center flex-col gap-6 pb-28 pt-40 text-black  items-center ">
+    <div  className="flex justify-center flex-col gap-6 pb-28 pt-40 text-black  items-center ">
       <div className={`${roboto.className} font-bold pl-20 flex items-center text-8xl w-[45rem]`}>Fund your creative work<span><img src="/tea.gif" width={300} alt="" /></span></div>
       <p className={`text-3xl font-sans`}> A crowdfunding platform for creators.</p>
       <div>
@@ -17,8 +19,6 @@ export default function Home() {
       <span className="relative rounded-xl px-8 m-[0.05rem] py-4 transition-all ease-in duration-75 bg-white dark:bg-gray-900 group-hover:bg-opacity-0">Read More</span></button>
       </div>
     </div>
-
-    {/* <div className="bg-[#AA866B] h-1 opacity-10"></div> */}
 
     <div className="container flex justify-center mx-auto mt-3 gap-5 pt-24">
       <div className='bg-white flex rounded-[3rem] flex-col py-5 items-center w-[90%] gap-3'>
@@ -114,9 +114,7 @@ export default function Home() {
       </div>
     </div>
     </div>
-    {/* <div className="bg-white h-1 opacity-10"></div> */}
 
-    
     </>
   );
 }

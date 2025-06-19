@@ -1,12 +1,10 @@
 import NextAuth from 'next-auth'
-import AppleProvider from 'next-auth/providers/apple'
-import FacebookProvider from 'next-auth/providers/facebook'
 import GoogleProvider from 'next-auth/providers/google'
 
 import GithubProvider from "next-auth/providers/github"
-import mongoose from 'mongoose'
+// import mongoose from 'mongoose'
 import User from '@/models/User'
-import Payment from '@/models/Payment'
+// import Payment from '@/models/Payment'
 import connectDB from '@/db/connectDb'
 
 
@@ -15,10 +13,14 @@ export const authoptions =  NextAuth({
       GithubProvider({
         clientId: process.env.GITHUB_ID,
         clientSecret: process.env.GITHUB_SECRET,
+      }),
+      GoogleProvider({
+        clientId : process.env.GOOGLE_ID,
+        clientSecret : process.env.GOOGLE_SECRET,
       })
     ],
     pages: {
-      singIn : "/login"
+      signIn : "/login"
   },
   callbacks:{
     async signIn({ user,account, email }) {
@@ -27,8 +29,6 @@ export const authoptions =  NextAuth({
           await connectDB();
           console.log(user);
           const currentUser = await User.findOne({email : user.email})
-          // console.log(currentUser);
-          console.log('test2');
           if(!currentUser)
           {
             console.log('test');
@@ -37,7 +37,21 @@ export const authoptions =  NextAuth({
               username : user.email.split("@")[0]
             })
           }
-        }  
+        }
+      if(account.provider === "google")
+      {
+        await connectDB();
+        console.log(user);
+        const currentuser = await User.findOne({email : user.email})
+        if(!currentuser)
+        {
+          console.log('User not found so creating a user!');
+          await User.create({
+            email : user.email,
+            username : user.email.split("@")[0]
+          })
+        }
+      }
       return true;
     },
     async session({ session, user, token }) {
