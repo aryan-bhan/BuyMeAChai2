@@ -3,6 +3,8 @@ import { signIn } from 'next-auth/react'
 import React from 'react'
 import { useEffect,useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+
 const Login = () => {
     useEffect(() => {
             document.body.style.overflow = 'hidden';
@@ -17,7 +19,7 @@ const Login = () => {
     {
         e.preventDefault();
         const formdata = new FormData(e.target);
-        const email = formdata.get("email");
+        const email = formdata.get("email").toLowerCase();
         const password = formdata.get("password");
 
         const res = await signIn("credentials", {
@@ -44,9 +46,9 @@ const Login = () => {
         </h2>
         <p className="mt-2 text-center text-sm text-black max-w">
             Or
-            <a href="#" className="font-medium text-blue-600 hover:text-[rgb(165,219,255)]">
+            <Link href="/Signup" className="font-medium text-blue-600 hover:text-[rgb(165,219,255)]">
                 &nbsp;create an account
-            </a>
+            </Link>
         </p>
     </div>
 
