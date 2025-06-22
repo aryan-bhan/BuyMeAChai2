@@ -39,7 +39,7 @@ const Login = () => {
 
   return (
     
-<div className=" flex flex-col justify-center h-full  bg-gray-100 pt-20 pb-96 sm:px-6 lg:px-8">
+<div className=" flex flex-col justify-center h-[100vh]  bg-gray-100 pt-96 pb-96 sm:px-6 lg:px-8">
     <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <h2 className="mt-6 text-center text-3xl font-extrabold text-black">
             Sign in to your account

@@ -8,7 +8,7 @@ export default function RootLayout({ children }) {
 
   return (
     <SessionWrapper>
-        <div className="min-h-screen bg-[#ffe8d6]  bottom-0 left-0 right-0 top-0 "> 
+        <div className="min-h-screen bg-[#FAE6CE]  bottom-0 left-0 right-0 top-0 "> 
         <Navbar/>
         {children}
         </div>

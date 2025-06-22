@@ -1,9 +1,11 @@
 "use server"
 
+const JWT = "PINATA_JWT";
 import Razorpay from "razorpay"
 import Payment from "@/models/Payment"
 import connectDB from "@/db/connectDb"
 import User from "@/models/User"
+
 
 export const initiate = async(amount , to_username,paymentform) =>
 {
@@ -66,9 +68,7 @@ export const UpdateProfile = async(data, previous_username) =>
         await Payment.updateMany({to_user: oldusername}, {to_user: ndata.username})
         
     }
-    else{
-
-        
+    else{ 
         await User.updateOne({email: ndata.email}, ndata)
     }
 }
