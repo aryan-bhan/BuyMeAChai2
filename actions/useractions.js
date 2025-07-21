@@ -1,9 +1,11 @@
 "use server"
 
+const JWT = "PINATA_JWT";
 import Razorpay from "razorpay"
 import Payment from "@/models/Payment"
 import connectDB from "@/db/connectDb"
 import User from "@/models/User"
+
 
 export const initiate = async(amount , to_username,paymentform) =>
 {
@@ -25,7 +27,6 @@ export const initiate = async(amount , to_username,paymentform) =>
     }
 
     let x = await instance.orders.create(options);
-    console.log(x);
     await Payment.create({oid : x.id , amount : amount/100,to_user : to_username , name : paymentform.name , message : paymentform.message})
 
     return x;
@@ -35,7 +36,7 @@ export const initiate = async(amount , to_username,paymentform) =>
 export const fetchuser = async(username)=>
 {
     await connectDB();
-    let u = await User.findOne({username :username});
+    let u = await User.findOne({username : username});
     let user = u.toObject({ flattenObjectIds: true })
     return user;
 }
@@ -67,9 +68,7 @@ export const UpdateProfile = async(data, previous_username) =>
         await Payment.updateMany({to_user: oldusername}, {to_user: ndata.username})
         
     }
-    else{
-
-        
+    else{ 
         await User.updateOne({email: ndata.email}, ndata)
     }
 }

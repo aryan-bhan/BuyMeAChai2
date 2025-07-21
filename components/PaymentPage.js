@@ -2,9 +2,8 @@
 import React, { useState } from 'react'
 import Script from 'next/script'
 import { fetchpayments, initiate , fetchuser } from '@/actions/useractions'
-import { useSession } from 'next-auth/react'
 import { useEffect } from 'react'
-
+import Image from 'next/image'
 
 
 
@@ -13,6 +12,8 @@ const PaymentPage = ({username}) => {
     const [paymentform, setPaymentform] = useState({name:"",message:"",amount:""})
     const [currentuser, setCurrentuser] = useState({})
     const [Payments, setPayments] = useState([])
+    const [ppurl,setPPurl] = useState(null);
+    const [cpurl, setCpurl] = useState(null)
 
     useEffect(() => {
       getData()
@@ -23,9 +24,23 @@ const PaymentPage = ({username}) => {
     {
        let u = await fetchuser(username)
        setCurrentuser(u);
-
+      console.log(username);
+       let ppres = await fetch(`/api/profilepic?username=${username}`,
+        {
+          method : "GET"
+        }
+       );
+       ppres = await ppres.json();
+       setPPurl(ppres.imgurl+"?img-width=500&img-height=500");
        let dbpayments = await fetchpayments(username)
        setPayments(dbpayments);
+       let cpres = await fetch(`/api/coverpic?username=${username}`,
+            {
+                method : "GET"
+           }
+        );
+      cpres = await cpres.json();
+      setCpurl(cpres.imgurl+"?img-width=2000&img-height=2000");
     }
 
     const handlechange = (e)=>
@@ -70,18 +85,19 @@ const PaymentPage = ({username}) => {
     
 
     <div className=' min-h-screen flex flex-col justify-between' >
-      <div className='bg-cover w-full relative '>
-        <img className=' w-full  h-[400px]' src="https://c10.patreonusercontent.com/4/patreon-media/p/campaign/229905/ef6a571b940b4bcd972ccc512b3488e3/eyJ3IjoxNjAwLCJ3ZSI6MX0%3D/1.jpeg?token-time=1741046400&token-hash=xf7ZOxMsXBGZg1evEVfKH4UZj63-MNrDPMv-xCyOyN8%3D" alt="" />
-       <div  className='absolute bg-white rounded-lg top-[90%] right-[46%]'>
-        <img width={120} className='rounded-lg' height={120} src="https://c10.patreonusercontent.com/4/patreon-media/p/campaign/4578772/8dfeeb5df5c64f8caf5ee58cf798656b/eyJoIjoxMDgwLCJ3IjoxMDgwfQ%3D%3D/6.png?token-time=1741824000&token-hash=opEq3XY9elpSebgOceviCPAEiCq1kTbvA4mGw4qgJMI%3D" alt="" />
-       </div>
+      <div className=' w-full  h-[400px] relative '>
+        {cpurl ? <Image className='object-cover' fill unoptimized src={cpurl} alt="" /> : <span>Loading...</span> }
       </div>
+      <div className='relative'>
+       <div  className='absolute bg-white rounded-lg w-[7.5rem] h-[7.5rem] bottom-[50%] right-[46%]'>
+        {ppurl ?<Image  className='object-cover rounded-lg' unoptimized fill src= {ppurl} alt="profile_pic" /> : <div className='text-black'>Loading..</div> }
+       </div>
       <div className="info flex flex-col justify-center items-center mt-24 gap-[.25rem]">
         <div className='text-xl font-semibold'>{username}</div>
         <div className=''>Creating science videos</div>
         <div className='text-gray-600'>4,668 members | 264 posts | $11,770/creation</div>
       </div>
-
+      </div>
       <div className="payment flex gap-3 justify-center w-[80%] my-10 mx-auto">
         <div className="supporters w-1/2 bg-[#acb6ef] rounded-lg p-10 ">
         <h2 className='text-2xl font-bold my-5'> Top 10 Supporters</h2>

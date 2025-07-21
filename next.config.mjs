@@ -1,4 +1,14 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+    images:
+    {
+        remotePatterns : [{
+            protocol : 'https',
+            hostname : process.env.PINATA_GATEWAY_URL,
+            port : '',
+            pathname : '/ipfs/**'
+        }]
+    }
+};
 
 export default nextConfig;
